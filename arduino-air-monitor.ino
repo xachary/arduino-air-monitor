@@ -2,6 +2,7 @@
 
 #include "display.h"
 #include "clock.h"
+#include "buttons.h"
 
 #include "m_Temperature_Tumidity.h"
 #include "m_UV.h"
@@ -27,24 +28,22 @@ long lastProcessSecond = 0;
 void setup() {
   Serial.begin(115200);
 
+  Buttons::Btn_1.init();
+
   Display::OLED.init();
   Clock::RTC.init();
 
   Module::TVOC.init();
   Module::HCHO.init();
   Module::CO2.init();
-
-  printTitle();
 }
 
-void process() {
+void process(bool display) {
   if (Module::TVOC.isWarmUp) {
     Module::TVOC.adjust(Module::Temperature.getValue(), Module::Humidity.getValue());
   }
 
   Module::HCHO.read();
-
-  DateTime now = Clock::RTC.now();
 
   // char nowStr[20] = "";
   // now.tostr(nowStr);
@@ -68,21 +67,31 @@ void process() {
   // Serial.print(Module::HCHO.getValue());
   // Serial.println(Module::HCHO.unit);
 
-  unsigned int year = now.year();
-  unsigned int month = now.month();
-  unsigned int day = now.day();
-  unsigned int hour = now.hour();
-  unsigned int minute = now.minute();
-  unsigned int second = now.second();
-
-  Display::OLED.clearBlockCenter(printHCHO_UGM3(Module::HCHO.getValue(), 3, false), printUV(Module::UV.getValue(), 3, true), 3);
-  Display::OLED.clearBlockCenter(printTVOC(Module::TVOC.getValue(), 5, false), printTemp(Module::Temperature.getValue(), 5, true), 5);
-  Display::OLED.clearBlockCenter(printCO2(Module::CO2.getValue(), 7, false), printHum(Module::Humidity.getValue(), 7, true), 7);
+  if (display) {
+    Display::OLED.clearBlockCenter(printHCHO_UGM3(Module::HCHO.getValue(), 3, false), printUV(Module::UV.getValue(), 3, true), 3);
+    Display::OLED.clearBlockCenter(printTVOC(Module::TVOC.getValue(), 5, false), printTemp(Module::Temperature.getValue(), 5, true), 5);
+    Display::OLED.clearBlockCenter(printCO2(Module::CO2.getValue(), 7, false), printHum(Module::Humidity.getValue(), 7, true), 7);
+  }
 }
 
+bool oledDisplay = true;
+
 void loop() {
-  Display::OLED.clearBlockCenter(printDate(0, false), SSD_1306::width * 0.5, 0);
-  Display::OLED.clearBlockCenter(printTime(1, false), SSD_1306::width * 0.5, 1);
+  Buttons::Btn_1.loop();
+
+  bool clicked = Buttons::Btn_1.getValue();
+
+  if (clicked) {
+    oledDisplay = !oledDisplay;
+  }
+
+  if (oledDisplay) {
+    Display::OLED.clearBlockCenter(printDate(0, false), SSD_1306::width * 0.5, 0);
+    Display::OLED.clearBlockCenter(printTime(1, false), SSD_1306::width * 0.5, 1);
+    printTitle();
+  } else {
+    Display::OLED.clearScreen();
+  }
 
   if (!Module::TVOC.isWarmUp) {
     Module::TVOC.warmUp();
@@ -96,7 +105,7 @@ void loop() {
     Serial.print(millis() / 1000);
     Serial.println("s");
 
-    process();
+    process(oledDisplay);
 
     lastProcessSecond = millis() / 1000;
   }
