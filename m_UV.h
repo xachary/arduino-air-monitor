@@ -2,6 +2,7 @@
 
 // 来源于网络示例
 // https://www.sohu.com/a/694634336_120248280
+// https://wiki.dfrobot.com.cn/_SKU_SEN0162__UV_Sensor
 
 
 // 紫外线指数
@@ -15,12 +16,12 @@ namespace Module {
 
 struct _UV {
   int getValue() {
-    // float each = (float)5 / (float)1024;
-    // float v = each * (float)analogRead(_Pin_UV);
-    // return v * 10;
+    // 0~1023
+    int analogValue = analogRead(_Pin_UV);
+    // mV
+    float voltageValue = (float)analogValue / 1024 * 5 * 1000;
 
-    float value = analogRead(_Pin_UV);
-    return value / (float)1024 * 3.3;
+    return voltageValue;
   }
 
   char unit[6] = "index";
