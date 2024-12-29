@@ -75,8 +75,8 @@ void process() {
   unsigned int minute = now.minute();
   unsigned int second = now.second();
 
-  Display::OLED.clearBlockCenter(printHCHO_UGM3(Module::HCHO.getValue(), 3, false), printUV(Module::UV.getValue(), 3, true), 2);
-  Display::OLED.clearBlockCenter(printTVOC(Module::TVOC.getValue(), 5, false), printTemp(Module::Temperature.getValue(), 5, true), 4);
+  Display::OLED.clearBlockCenter(printHCHO_UGM3(Module::HCHO.getValue(), 3, false), printUV(Module::UV.getValue(), 3, true), 3);
+  Display::OLED.clearBlockCenter(printTVOC(Module::TVOC.getValue(), 5, false), printTemp(Module::Temperature.getValue(), 5, true), 5);
   Display::OLED.clearBlockCenter(printCO2(Module::CO2.getValue(), 7, false), printHum(Module::Humidity.getValue(), 7, true), 7);
 }
 
