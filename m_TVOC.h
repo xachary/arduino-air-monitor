@@ -5,7 +5,7 @@
 #include "DFRobot_SGP40.h"
 
 // TVOC指数
-// 型号：ccs_811
+// 型号：sgp_40
 // 接口：VCC->VCC(5V)、GND->GND、SDA->D6、SCL->D7、WAK->GND
 // 协议：I2C(软)
 // 地址：0x5A
