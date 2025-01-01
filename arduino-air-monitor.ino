@@ -39,6 +39,7 @@ void setup() {
 }
 
 void process(bool display) {
+  // 设置当前环境中的相对湿度和温度，获得更精确的数值
   if (Module::TVOC.isWarmUp) {
     Module::TVOC.adjust(Module::Temperature.getValue(), Module::Humidity.getValue());
   }

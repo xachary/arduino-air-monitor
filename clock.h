@@ -24,7 +24,7 @@ struct _RTC {
           || now.hour() > cNow.hour()
           || now.minute() > cNow.minute()
           || now.second() > cNow.second())) {
-      // _rtc.adjust(cNow);
+      _rtc.adjust(cNow);
     }
     // _rtc.adjust(cNow);
   }

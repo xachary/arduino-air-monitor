@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 // 基于 https://github.com/RobTillaart/MTP40F/blob/master/examples/MTP40F_PWM_demo/MTP40F_PWM_demo.ino
-// 由于上面的示例，关于PWM计算，不符合文档下列所属，因此修改之。
+// 由于上面的示例，关于PWM计算，不符合文档下列所说，因此修改之。
 
 // 【PWM 功能详解】
 // PWM 的周期是 1004ms

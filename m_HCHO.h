@@ -10,8 +10,8 @@
 
 #define _Pin_HCHO_RX 8
 #define _Pin_HCHO_TX 9
-#define _Frame_Start_HCHO 0Xff
-#define _Frame_Len_HCHO 9
+#define _Frame_Start_HCHO 0Xff  // 帧 起始符
+#define _Frame_Len_HCHO 9       // 帧长度
 
 namespace Module {
 
@@ -25,6 +25,9 @@ byte buffer[_Frame_Len_HCHO] = {};
 // 帧数据组装完成
 bool buffer_done = false;
 
+// 上一次的值
+int lastData = 0;
+// 值
 int data = 0;
 
 void passiveMode() {
@@ -107,6 +110,19 @@ void Calc() {
   }
 }
 
+bool Check() {
+  uint8_t sum = 0;
+
+  // 1~7位求和
+  for (unsigned int i = 1; i < _Frame_Len_HCHO - 1; i++) {
+    sum += buffer[i];
+  }
+
+  sum = (~sum) + 1;
+
+  return sum == buffer[_Frame_Len_HCHO - 1];
+}
+
 void Read() {
   _serial_hcho.listen();
   // 串口可用
@@ -122,10 +138,16 @@ void Read() {
     // 重置
     buffer_done = false;
 
-    // 更新数值
-    data = buffer[2] * 256 + buffer[3];  // 数据定义：高八位+低八位
-    if (data > 10000) {
-      data = 0;
+    if (Check()) {
+      // 更新数值
+      data = buffer[2] * 256 + buffer[3];  // 数据定义：高八位+低八位
+
+      // 容错：超过量程
+      if (data < 0 || data > 10000) {
+        data = lastData;
+      }
+
+      lastData = data;
     }
   }
   // _serial_hcho.end();
