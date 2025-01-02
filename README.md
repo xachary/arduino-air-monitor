@@ -2,6 +2,10 @@
 
 DIY空气质量仪
 
+## 介绍
+
+[CSDN](https://blog.csdn.net/xachary2/category_12867389.html) | [掘金](https://juejin.cn/column/7454100785795006515)
+
 ## 开发板
 
 Arduino Nano（国产）
