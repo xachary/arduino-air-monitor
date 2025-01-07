@@ -3,6 +3,7 @@
 #include "display.h"
 #include "clock.h"
 #include "buttons.h"
+#include "tx.h"
 
 #include "m_Temperature_Tumidity.h"
 #include "m_UV.h"
@@ -32,6 +33,7 @@ void setup() {
 
   Display::OLED.init();
   Clock::RTC.init();
+  Transfer::TX.init();
 
   Module::TVOC.init();
   Module::HCHO.init();
@@ -68,10 +70,32 @@ void process(bool display) {
   // Serial.print(Module::HCHO.getValue());
   // Serial.println(Module::HCHO.unit);
 
+  int hcho = Module::HCHO.getValue();
+  int uv = Module::UV.getValue();
+  int tvoc = Module::TVOC.getValue();
+  float temp = Module::Temperature.getValue();
+  float hum = Module::Humidity.getValue();
+  int co2 = Module::CO2.getValue();
+
+  Serial.print("hcho");
+  Serial.println(hcho);
+  Serial.print("uv");
+  Serial.println(uv);
+  Serial.print("tvoc");
+  Serial.println(tvoc);
+  Serial.print("temp");
+  Serial.println(temp);
+  Serial.print("hum");
+  Serial.println(hum);
+  Serial.print("co2");
+  Serial.println(co2);
+  
+  Transfer::TX.send(display, hcho, tvoc, co2, temp, hum, uv);
+
   if (display) {
-    Display::OLED.clearBlockCenter(printHCHO_UGM3(Module::HCHO.getValue(), 3, false), printUV(Module::UV.getValue(), 3, true), 3);
-    Display::OLED.clearBlockCenter(printTVOC(Module::TVOC.getValue(), 5, false), printTemp(Module::Temperature.getValue(), 5, true), 5);
-    Display::OLED.clearBlockCenter(printCO2(Module::CO2.getValue(), 7, false), printHum(Module::Humidity.getValue(), 7, true), 7);
+    Display::OLED.clearBlockCenter(printHCHO_UGM3(hcho, 3, false), printUV(uv, 3, true), 3);
+    Display::OLED.clearBlockCenter(printTVOC(tvoc, 5, false), printTemp(temp, 5, true), 5);
+    Display::OLED.clearBlockCenter(printCO2(co2, 7, false), printHum(hum, 7, true), 7);
   }
 }
 
@@ -99,7 +123,7 @@ void loop() {
   }
 
   // process each second
-  if (millis() / 1000 - lastProcessSecond >= 1) {
+  if (millis() / 1000 - lastProcessSecond >= 10) {
     Serial.println();
 
     Serial.print("loop:");
