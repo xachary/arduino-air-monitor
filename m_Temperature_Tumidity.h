@@ -17,7 +17,11 @@ struct _Temperature {
   float lastValue = 25;
   float getValue() {
     float value = _m_dht_22.getTemperature();
-    if (value > 50 || value < -50) {
+
+    // 异常数据：
+    // 1、不正常温度
+    // 2、突然暴涨（一秒内涨幅超 10 度）
+    if (value > 50 || value < -50 || value - lastValue > 10) {
       value = lastValue;
     }
     lastValue = value;
@@ -31,7 +35,11 @@ struct _Humidity {
   float lastValue = 70;
   float getValue() {
     float value = _m_dht_22.getHumidity();
-    if (value > 100 || value < 0) {
+
+    // 异常数据：
+    // 1、不正常温度
+    // 2、突然暴涨（一秒内涨幅超 20%）
+    if (value > 100 || value < 0 || value - lastValue > 20) {
       value = lastValue;
     }
     lastValue = value;

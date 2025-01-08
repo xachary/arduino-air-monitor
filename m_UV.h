@@ -21,7 +21,8 @@ struct _UV {
     // mV
     float voltageValue = (float)analogValue / 1024 * 5 * 1000;
 
-    return voltageValue;
+    // 容错波动，50以上才有意义
+    return voltageValue >= 50 ? voltageValue : 0;
   }
 
   char unit[6] = "index";
