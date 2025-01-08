@@ -77,17 +77,17 @@ void process(bool display) {
   float hum = Module::Humidity.getValue();
   int co2 = Module::CO2.getValue();
 
-  Serial.print("hcho");
+  Serial.print("hcho:");
   Serial.println(hcho);
-  Serial.print("uv");
+  Serial.print("uv:");
   Serial.println(uv);
-  Serial.print("tvoc");
+  Serial.print("tvoc:");
   Serial.println(tvoc);
-  Serial.print("temp");
+  Serial.print("temp:");
   Serial.println(temp);
-  Serial.print("hum");
+  Serial.print("hum:");
   Serial.println(hum);
-  Serial.print("co2");
+  Serial.print("co2:");
   Serial.println(co2);
   
   Transfer::TX.send(display, hcho, tvoc, co2, temp, hum, uv);
@@ -123,9 +123,8 @@ void loop() {
   }
 
   // process each second
-  if (millis() / 1000 - lastProcessSecond >= 10) {
+  if (millis() / 1000 - lastProcessSecond >= 1) {
     Serial.println();
-
     Serial.print("loop:");
     Serial.print(millis() / 1000);
     Serial.println("s");
@@ -229,12 +228,11 @@ unsigned int printHCHO_UGM3(unsigned int value, unsigned int row, bool isRight) 
 
   if (isRight) {
     Display::OLED.printRight(str, row);
-    ;
   } else {
     Display::OLED.print(str, 0, row);
   }
 
-  Serial.println(str);
+  // Serial.println(str);
 
   unsigned int w = Display::OLED.getTextSize(str) + 1;
 
@@ -255,7 +253,7 @@ unsigned int printTVOC(float value, unsigned int row, bool isRight) {
     Display::OLED.print(str, 0, row);
   }
 
-  Serial.println(str);
+  // Serial.println(str);
 
   return Display::OLED.getTextSize(str);
 }
@@ -281,7 +279,7 @@ unsigned int printTemp(float value, unsigned int row, bool isRight) {
     printDeg(w - 3, row);
   }
 
-  Serial.println(str);
+  // Serial.println(str);
 
   return Display::OLED.getTextSize(str);
 }
@@ -301,7 +299,7 @@ unsigned int printHum(float value, unsigned int row, bool isRight) {
     Display::OLED.print(str, 0, row);
   }
 
-  Serial.println(str);
+  // Serial.println(str);
 
   return Display::OLED.getTextSize(str);
 }
@@ -321,7 +319,7 @@ unsigned int printCO2(unsigned int value, unsigned int row, bool isRight) {
     Display::OLED.print(str, 0, row);
   }
 
-  Serial.println(str);
+  // Serial.println(str);
 
   return Display::OLED.getTextSize(str);
 }
@@ -340,7 +338,7 @@ unsigned int printUV(unsigned int value, unsigned int row, bool isRight) {
     Display::OLED.print(str, 0, row);
   }
 
-  Serial.println(str);
+  // Serial.println(str);
 
   return Display::OLED.getTextSize(str);
 }
@@ -360,7 +358,7 @@ unsigned int printPM1(unsigned int value, unsigned int row, bool isRight) {
     Display::OLED.print(str, 0, row);
   }
 
-  Serial.println(str);
+  // Serial.println(str);
 
   unsigned int w = Display::OLED.getTextSize(str) + 1;
 
@@ -383,7 +381,7 @@ unsigned int printPM2_5(unsigned int value, unsigned int row, bool isRight) {
     Display::OLED.print(str, 0, row);
   }
 
-  Serial.println(str);
+  // Serial.println(str);
 
   unsigned int w = Display::OLED.getTextSize(str) + 1;
 
@@ -405,7 +403,7 @@ unsigned int printPM10(unsigned int value, unsigned int row, bool isRight) {
     Display::OLED.print(str, 0, row);
   }
 
-  Serial.println(str);
+  // Serial.println(str);
 
   unsigned int w = Display::OLED.getTextSize(str) + 1;
 

@@ -111,9 +111,9 @@ struct _TX {
       sum += buffer[i];
     }
 
-    Serial.println();
-    Serial.print("sum:");
-    Serial.println(sum);
+    // Serial.println();
+    // Serial.print("sum:");
+    // Serial.println(sum);
 
     memcpy(int32Bytes, &sum, int32Size);
     for (uint8_t i = 0; i < int32Size; i++) {
@@ -123,11 +123,11 @@ struct _TX {
     // 发送
     for (uint8_t i = 0; i < _Frame_Len; i++) {
       _serial.write(buffer[i]);
-      Serial.print(buffer[i]);
-      Serial.print(",");
+      // Serial.print(buffer[i]);
+      // Serial.print(",");
     }
-    Serial.println();
-    Serial.println();
+    // Serial.println();
+    // Serial.println();
   }
 } TX;
 
