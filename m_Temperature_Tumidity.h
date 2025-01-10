@@ -15,16 +15,16 @@ DHT22 _m_dht_22(_Pin_Temperature_Humidity);
 
 struct _Temperature {
   float lastValue = 25;
+
   float getValue() {
     float value = _m_dht_22.getTemperature();
 
-    // 异常数据：
-    // 1、不正常温度
-    // 2、突然暴涨（一秒内涨幅超 10 度）
-    if (value > 50 || value < -50 || value - lastValue > 10) {
+    // 容错交给网页处理，这里只保证在量程之内
+    if (value < -50 || value > 50) {
       value = lastValue;
+    } else {
+      lastValue = value;
     }
-    lastValue = value;
     return value;
   }
 
@@ -33,16 +33,16 @@ struct _Temperature {
 
 struct _Humidity {
   float lastValue = 70;
+
   float getValue() {
     float value = _m_dht_22.getHumidity();
 
-    // 异常数据：
-    // 1、不正常温度
-    // 2、突然暴涨（一秒内涨幅超 20%）
-    if (value > 100 || value < 0 || value - lastValue > 20) {
+    // 容错交给网页处理，这里只保证在量程之内
+    if (value < 0 || value > 100) {
       value = lastValue;
+    } else {
+      lastValue = value;
     }
-    lastValue = value;
     return value;
   }
 

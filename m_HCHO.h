@@ -142,14 +142,12 @@ void Read() {
       // 更新数值
       data = buffer[2] * 256 + buffer[3];  // 数据定义：高八位+低八位
 
-      // 容错：
-      // 1、超过量程（10ppm甲醛约为12.5mg/m3即12500ug/m3）
-      // 2、异常数据（一秒内涨幅超 1000）
-      if (data < 0 || data > 12500 || data - lastData > 1000) {
+      // 容错交给网页处理，这里只保证在量程之内
+      if (data < 0 || data > 12500) {
         data = lastData;
+      } else {
+        lastData = data;
       }
-
-      lastData = data;
     }
   }
   // _serial_hcho.end();

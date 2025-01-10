@@ -38,8 +38,18 @@ struct _TVOC {
     _m_sgp_40.setRhT(hum, temp);
   }
 
+  int lastValue = 0;
+
   int getValue() {
-    return isWarmUp ? _m_sgp_40.getVoclndex() : 0;
+    int value = isWarmUp ? _m_sgp_40.getVoclndex() : 0;
+
+    // 容错交给网页处理，这里只保证在量程之内
+    if (value < 0 || value > 1000) {
+      value = lastValue;
+    } else {
+      lastValue = value;
+    }
+    return value;
   }
 
   char unit[6] = "index";

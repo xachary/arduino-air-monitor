@@ -55,15 +55,17 @@ struct _CO2 {
     attachInterrupt(digitalPinToInterrupt(_Pin_CO2), MTP_40_F::Interrupt, CHANGE);
   }
 
-  unsigned int getValue() {
-    unsigned int value = MTP_40_F::DurationToPPM();
+  int lastValue = 400;
 
-    // 量程 400ppm ~ 5000ppm
-    // 首次计算结果有可能是 65535，因此做一个判断修正。
-    if (value > 10000) {
-      value = 0;
+  int getValue() {
+    int value = MTP_40_F::DurationToPPM();
+
+    // 容错交给网页处理，这里只保证在量程之内
+    if (value < 400 || value > 5000) {
+      value = lastValue;
+    } else {
+      lastValue = value;
     }
-
     return value;
   }
 

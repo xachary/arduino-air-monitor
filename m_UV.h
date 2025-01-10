@@ -15,14 +15,21 @@
 namespace Module {
 
 struct _UV {
+  float lastValue = 0;
+
   int getValue() {
     // 0~1023
     int analogValue = analogRead(_Pin_UV);
     // mV
     float voltageValue = (float)analogValue / 1024 * 5 * 1000;
 
-    // 容错波动，50以上才有意义
-    return voltageValue >= 50 ? voltageValue : 0;
+    // 容错交给网页处理，这里只保证在量程之内
+    if (voltageValue < 0 || voltageValue > 5000) {
+      voltageValue = lastValue;
+    } else {
+      lastValue = voltageValue;
+    }
+    return voltageValue;
   }
 
   char unit[6] = "index";
