@@ -21,7 +21,6 @@ DFRobot_SGP40 _m_sgp_40(&SoftWire);
 
 struct _TVOC {
   void init() {
-    int timeout = 0;
     // 预热10秒
     _m_sgp_40.begin(10000);
   }

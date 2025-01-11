@@ -26,6 +26,7 @@ struct _RTC {
           || now.second() > cNow.second())) {
       _rtc.adjust(cNow);
     }
+    // 如果时钟跑快了，需要强制更新一下
     // _rtc.adjust(cNow);
   }
 
